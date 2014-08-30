@@ -59,12 +59,7 @@ public class MLPackageDetailServlet extends HttpServlet
 	            {
 	            	try 
 	            	{
-	            		String[] splitStrArr=text.split("\\|");
-	            		resp.getWriter().println(text);
-	            		for(String str : splitStrArr)
-	            		{
-	            			resp.getWriter().println(str);
-	            		}
+	            		String[] splitStrArr=text.split("\\|");	            		
 	            		String audioFileStr=splitStrArr[2];
 	            		respStr.accumulate(jsonObjArrName, audioFileStr);
 	            		String imageFileStr=splitStrArr[3];				
