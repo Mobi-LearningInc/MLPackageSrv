@@ -8,9 +8,17 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>MLPackageInfoServlet</servlet-name>
 		<servlet-class>com.mobilearninginc.mlpackageserv.MLPackageInfoServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>MLPackageDetailServlet</servlet-name>
+		<servlet-class>com.mobilearninginc.mlpackageserv.MLPackageDetailServlet</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>MLPackageInfoServlet</servlet-name>
-		<url-pattern>/mlpackageinfoservlet</url-pattern>
+		<url-pattern>/packageinfo</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>MLPackageDetailServlet</servlet-name>
+		<url-pattern>/packagedetail</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
