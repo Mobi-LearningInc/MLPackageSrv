@@ -10,15 +10,15 @@ import com.google.appengine.labs.repackaged.org.json.JSONObject;
 
 @SuppressWarnings("serial")
 public class MLPackageInfoServlet extends HttpServlet {
-	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
+	public void doGet(HttpServletRequest req, HttpServletResponse resp)throws IOException 
+	{
 		resp.setContentType("text/plain");				
 		JSONObject respStr = new JSONObject();
 		try 
-		{
-			
+		{			
 			Set<String> paths =this.getServletContext().getResourcePaths(MLConst.PackageDir);
 			respStr.put("detailServlet", MLConst.DetailServletName);
+			respStr.put("detailServletParamName", MLConst.PackageIdParamName);
 			for(String packagePathStr : paths)
 			{
 				respStr.accumulate("packageList", packagePathStr.replace(MLConst.PackageDir+"/", "").replace("/", ""));
@@ -26,12 +26,9 @@ public class MLPackageInfoServlet extends HttpServlet {
 		}
 		catch (Exception e)
 		{
-			try {
-				respStr.put("error", e.toString());
-			} catch (JSONException e1) 
-			{
-				e1.printStackTrace();
-			}
+			e.printStackTrace();
+			resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"failed to read folders, or create JSON object");
+			return;
 		}
 		resp.getWriter().println(respStr.toString());
 	}

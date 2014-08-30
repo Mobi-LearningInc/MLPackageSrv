@@ -19,10 +19,12 @@ public class MLPackageDetailServlet extends HttpServlet
 {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException
 	{
-		String packageId = req.getParameter(MLConst.DetailServletParamName);
+		resp.setContentType("text/plain");	
+		String packageId = req.getParameter(MLConst.PackageIdParamName);
 		if(packageId==null||packageId.isEmpty())
 		{
-			resp.getWriter().println("No Param Given");
+			resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"No Param Given");
+			return;
 		}
 		else
 		{
@@ -43,15 +45,21 @@ public class MLPackageDetailServlet extends HttpServlet
 	            String jsonObjArrName="fileList";
 	            try
 	            {
-	            respStr.accumulate(jsonObjArrName, itemsFileName);
-	            respStr.accumulate(jsonObjArrName, pairsFileName);
-	            respStr.accumulate(jsonObjArrName, itemCatFileName);
-	            respStr.accumulate(jsonObjArrName, catPairsFileName);
-	            respStr.accumulate(jsonObjArrName, catFileName);
+	            	respStr.put("fileLoaderServlet", MLConst.FileLoaderServletName);
+	            	respStr.put("fileLoaderServletPackageIdParamName", MLConst.PackageIdParamName);
+	            	respStr.put("fileLoaderServletFileIdParamName", MLConst.FileIdParamName);	            	
+	            	
+	            	respStr.put("pngImageSuffix", MLConst.RetinaPngSuffix);
+	            	
+		            respStr.accumulate(jsonObjArrName, itemsFileName);
+		            respStr.accumulate(jsonObjArrName, pairsFileName);
+		            respStr.accumulate(jsonObjArrName, itemCatFileName);
+		            respStr.accumulate(jsonObjArrName, catPairsFileName);
+		            respStr.accumulate(jsonObjArrName, catFileName);
 	            }
 	            catch(Exception e)
 	            {
-	            	resp.getWriter().println("Cannot create JSON Object");
+	            	resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Cannot create JSON Object");
 	            	return;
 	            }
 	            
@@ -64,19 +72,22 @@ public class MLPackageDetailServlet extends HttpServlet
 	            		respStr.accumulate(jsonObjArrName, audioFileStr);
 	            		String imageFileStr=splitStrArr[3];				
 	            		respStr.accumulate(jsonObjArrName, imageFileStr);
+	            		String retinaImageFileStr=splitStrArr[3].replace(".png", MLConst.RetinaPngSuffix+".png");				
+	            		respStr.accumulate(jsonObjArrName, retinaImageFileStr);
 					} 
 	            	catch (Exception e) 
 	            	{
 						e.printStackTrace();
-						resp.getWriter().println("Cannot read line or create JSON Object");
+						resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Cannot read line or create JSON Object");
 						return;
 					}
 	            }
+	            inputStream.close();
 	            resp.getWriter().println(respStr.toString());
 			}
 			else
 			{
-				resp.getWriter().println("Invalid PackageId or inner file name problem");
+				resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Invalid PackageId or inner file name problem");
 				return;
 			}
 			
